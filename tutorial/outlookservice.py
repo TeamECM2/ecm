@@ -44,7 +44,7 @@ def get_my_messages(access_token, user_email):
   #  - Only return the DateTimeReceived, Subject, and From fields
   #  - Sort the results by the DateTimeReceived field in descending order
   query_parameters = {'$top': '10',
-                      '$select': 'DateTimeReceived,Subject,From',
+                      '$select': 'DateTimeReceived,Subject,From,Body',
                       '$orderby': 'DateTimeReceived DESC'}
 
   r = make_api_call('GET', get_messages_url, access_token, user_email, parameters = query_parameters)

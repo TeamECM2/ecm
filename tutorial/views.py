@@ -3,7 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from tutorial.authhelper import get_signin_url, get_token_from_code, get_user_email_from_id_token
 from tutorial.outlookservice import get_my_messages
-
+from lxml import html
+import pickle
+import os
+#import tokenizer
 
 def home(request):
   redirect_uri = request.build_absolute_uri(reverse('tutorial:gettoken'))
@@ -26,9 +29,16 @@ def mail(request):
   user_email = request.session['user_email']
   # If there is no token in the session, redirect to home
   if not access_token:
-    return HttpResponseRedirect(reverse('tutorial:home'))
+  	return HttpResponseRedirect(reverse('tutorial:home'))
   else:
-    messages = get_my_messages(access_token, user_email)
-    context = { 'messages': messages['value'] }
-    return render(request, 'tutorial/mail.html', context)
-    return HttpResponse('Messages: {0}'.format(messages))
+  	messages = get_my_messages(access_token, user_email)
+  	if 'value' not in messages:
+  		return render(request, 'tutorial/mail.html', dict())
+  	for i in range(0, len(messages['value'])):
+  		messages['value'][i]['Body']['Content'] = html.fromstring(messages['value'][i]['Body']['Content']).text_content() 	
+  		pickle.dump( messages['value'][i]['Body']['Content'], open( "save.p", "wb" ), protocol=2 )
+  		os.system("py tokenizer.py")
+  		a = pickle.load(open("temp.p", "rb"))
+  		messages['value'][i]['Body']['Keywords'] = (','.join(a))
+  	context = { 'messages': messages['value'] }
+  	return render(request, 'tutorial/mail.html', context)

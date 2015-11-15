@@ -9,9 +9,11 @@
       </tr>
       {% for message in messages %}
         <tr>
-          <td>{{ message.From.EmailAddress.Name }}</td>
+          <td>{{ message.From.EmailAddress.Address }}</td>
           <td>{{ message.Subject }}</td>
-          <td>{{ message.DateTimeReceived }}</td>
+          <td>{{ message.DateTimeReceived }}</td> 
+          
+          <td>{{ message.Body.Content }}</td>
         </tr>
       {% endfor %}
     </table>
