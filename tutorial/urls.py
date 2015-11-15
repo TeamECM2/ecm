@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url 
 from tutorial import views 
 
+
 urlpatterns = patterns('', 
   # The home view ('/tutorial/') 
   url(r'^$', views.home, name='home'), 
@@ -8,4 +9,6 @@ urlpatterns = patterns('',
   url(r'^home/$', views.home, name='home'), 
   # Redirect to get token ('/tutorial/gettoken/')
   url(r'^gettoken/$', views.gettoken, name='gettoken'),
+  # Mail view ('/tutorial/mail/')>
+  url(r'^mail/$', views.mail, name='mail'),
   )
